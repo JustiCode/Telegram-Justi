@@ -18,6 +18,9 @@ import appModuleHandler
 import keyboardHandler
 import logHandler
 import scriptHandler
+from addonHandler import initTranslation
+
+initTranslation()
 
 log = logHandler.log
 
@@ -51,6 +54,8 @@ class AppModule(appModuleHandler.AppModule):
 
     def findObjectByName(self, obj, target):
         """
+        """
+        """
         Busca recursivamente un objeto
         por coincidencia parcial de nombre.
         """
@@ -75,6 +80,45 @@ class AppModule(appModuleHandler.AppModule):
                 result = self.findObjectByName(
                     child,
                     target
+                )
+
+                if result:
+                    return result
+
+                child = child.next
+
+        except Exception:
+            pass
+
+        return None
+
+    def findObjectByAutomationID(self, obj, targetID):
+        """Busca un objeto por AutomationID."""
+
+        if not obj:
+            return None
+
+        try:
+            automationID = getattr(
+                obj,
+                "UIAAutomationId",
+                ""
+            ) or ""
+
+            if automationID == targetID:
+                return obj
+
+        except Exception:
+            pass
+
+        try:
+            child = obj.firstChild
+
+            while child:
+
+                result = self.findObjectByAutomationID(
+                    child,
+                    targetID
                 )
 
                 if result:
@@ -118,7 +162,6 @@ class AppModule(appModuleHandler.AppModule):
             pass
 
         return False
-
     def activateNamedControl(
         self,
         targetName,
@@ -178,10 +221,11 @@ class AppModule(appModuleHandler.AppModule):
         try:
 
             if (
-                obj.windowClassName
-                == "Windows.UI.Core.CoreWindow"
-                and "Abrir menú de navegación"
-                in obj.name
+                getattr(
+                obj,
+                "UIAAutomationId",
+                    ""
+                ) == "Photo"
             ):
 
                 def focusChats():
@@ -195,9 +239,9 @@ class AppModule(appModuleHandler.AppModule):
                     self.sendKey("tab")
 
                 wx.CallLater(
-                    1200,
-                    focusChats
-                )
+    600,
+    focusChats
+)
 
         except Exception:
             log.exception(
@@ -206,13 +250,17 @@ class AppModule(appModuleHandler.AppModule):
 
         nextHandler()
 
-    # =========================================================
+        # =========================================================
     # Scripts
     # =========================================================
 
+    @scriptHandler.script(
+        description=_("Grabar o enviar mensaje de voz"),
+        category=_("Telegram Justi"),
+        gesture="kb:control+r"
+    )
     def script_voiceMessage(self, gesture):
         """Graba o envía mensajes de voz."""
-
         currentTime = time.time()
 
         try:
@@ -226,19 +274,11 @@ class AppModule(appModuleHandler.AppModule):
 
                 tones.beep(1200, 100)
 
-                ui.message(
-                    "Audio enviado"
-                )
-
             else:
 
-                gesture.send()
+                self.sendKey("control+r")
 
                 tones.beep(700, 100)
-
-                ui.message(
-                    "Grabando"
-                )
 
             self.lastAudioGesture = currentTime
 
@@ -247,10 +287,39 @@ class AppModule(appModuleHandler.AppModule):
                 "Error gestionando audio"
             )
 
+    @scriptHandler.script(
+        description=_("Cancelar grabación de mensaje de voz"),
+        category=_("Telegram Justi"),
+        gesture="kb:control+shift+r"
+    )
+    def script_cancelVoiceMessage(self, gesture):
+
+        fg = api.getForegroundObject()
+
+        button = self.findObjectByAutomationID(
+            fg,
+            "ButtonCancelRecording"
+        )
+
+        if not button:
+            tones.beep(200, 50)
+            return
+
+        try:
+            button.doAction()
+
+            tones.beep(500, 80)
+
+        except Exception:
             ui.message(
-                "No se pudo grabar el audio"
+                "No se pudo cancelar la grabación"
             )
 
+    @scriptHandler.script(
+        description=_("Reproducir o pausar mensaje de voz"),
+        category=_("Telegram Justi"),
+        gesture="kb:space"
+    )
     def script_playPauseAudio(self, gesture):
         """Reproduce o pausa mensajes de voz."""
 
@@ -258,13 +327,17 @@ class AppModule(appModuleHandler.AppModule):
 
             focus = api.getFocusObject()
 
-            if focus and focus.name:
+            if focus:
 
-                text = focus.name.lower()
+                audioMessage = self.findObjectByAutomationID(
+                    focus,
+                    "Recognize"
+                )
 
-                if "mensaje de voz" in text:
+                if audioMessage:
 
                     try:
+
                         focus.doAction()
 
                         tones.beep(900, 50)
@@ -303,122 +376,240 @@ class AppModule(appModuleHandler.AppModule):
 
         gesture.send()
 
+    @scriptHandler.script(
+        description=_("Abrir perfil del chat actual"),
+        category=_("Telegram Justi"),
+        gesture="kb:control+p"
+    )
     def script_openProfile(self, gesture):
         """Abre el perfil del chat actual."""
 
-        self.activateNamedControl(
-            "últ. vez",
-            successMessage="Perfil abierto",
-            errorMessage="Perfil no encontrado",
-            beepFrequency=900
+        fg = api.getForegroundObject()
+
+        button = self.findObjectByAutomationID(
+            fg,
+            "Profile"
         )
 
+        if not button:
+            ui.message("Perfil no encontrado")
+            return
+
+        try:
+            button.doAction()
+            tones.beep(900, 80)
+
+        except Exception:
+            ui.message("No se pudo abrir el perfil")
+
+    @scriptHandler.script(
+        description=_("Inicia una llamada de voz"),
+        category=_("Telegram Justi"),
+        gesture="kb:control+shift+l"
+    )
     def script_voiceCall(self, gesture):
         """Inicia una llamada de voz."""
 
-        self.activateNamedControl(
-            "Llamar",
-            successMessage="Llamando",
-            errorMessage="Botón llamar no encontrado"
+        fg = api.getForegroundObject()
+
+        button = self.findObjectByAutomationID(
+            fg,
+            "Call"
         )
 
+        if not button:
+            ui.message("Llamar no encontrado")
+            return
+
+        try:
+            button.doAction()
+            tones.beep(1000, 80)
+
+        except Exception:
+            ui.message("No se pudo iniciar la llamada")
+
+    @scriptHandler.script(
+        description=_("Iniciar videollamada"),
+        category=_("Telegram Justi"),
+        gesture="kb:control+shift+v"
+    )
     def script_videoCall(self, gesture):
         """Inicia una videollamada."""
 
-        self.activateNamedControl(
-            "Videollamar",
-            successMessage="Videollamada",
-            errorMessage="Botón videollamada no encontrado",
-            beepFrequency=1200
+        fg = api.getForegroundObject()
+
+        button = self.findObjectByAutomationID(
+            fg,
+            "VideoCall"
         )
 
+        if not button:
+            ui.message("NO ENCONTRÉ VIDEOCALL")
+            return
+
+        try:
+            button.doAction()
+            tones.beep(1200, 100)
+
+        except Exception:
+            ui.message("ERROR VIDEOCALL")
+
+    @scriptHandler.script(
+        description=_("Finalizar llamada"),
+        category=_("Telegram Justi"),
+        gesture="kb:control+shift+n"
+    )
     def script_endCall(self, gesture):
         """Finaliza una llamada."""
 
-        self.activateNamedControl(
-            "Finalizar",
-            successMessage="Llamada finalizada",
-            errorMessage="Botón finalizar no encontrado",
-            beepFrequency=500
+        fg = api.getForegroundObject()
+
+        button = self.findObjectByName(
+            fg,
+            "finalizar"
         )
 
+        if not button:
+            ui.message("NO ENCONTRÉ FINALIZAR")
+            return
+
+        try:
+            button.doAction()
+            tones.beep(500, 80)
+
+        except Exception:
+            ui.message("ERROR FINALIZAR")
+
+    @scriptHandler.script(
+        description=_("Adjuntar multimedia"),
+        category=_("Telegram Justi"),
+        gesture="kb:control+shift+a"
+    )
     def script_attachMedia(self, gesture):
-        """Abre el menú adjuntar multimedia."""
+        fg = api.getForegroundObject()
 
-        self.activateNamedControl(
-            "Adjuntar multimedia",
-            successMessage="Adjuntar multimedia",
-            errorMessage="Botón adjuntar multimedia no encontrado"
+        button = self.findObjectByAutomationID(
+            fg,
+            "ButtonAttach"
         )
 
+        if not button:
+            ui.message("NO ENCONTRÉ BUTTONATTACH")
+            return
+
+        try:
+            button.doAction()
+            tones.beep(700, 80)
+
+        except Exception:
+            ui.message("ERROR BUTTONATTACH")
+
+    @scriptHandler.script(
+        description=_("Abrir nuevo chat"),
+        category=_("Telegram Justi"),
+        gesture="kb:control+n"
+    )
     def script_newChat(self, gesture):
         """Abre la ventana nuevo chat."""
 
-        self.activateNamedControl(
-            "Nuevo chat",
-            successMessage="Nuevo chat",
-            errorMessage="Botón nuevo chat no encontrado"
+        fg = api.getForegroundObject()
+
+        button = self.findObjectByAutomationID(
+            fg,
+            "ComposeButton"
         )
 
+        if not button:
+            ui.message("Botón nuevo chat no encontrado")
+            return
+
+        try:
+            button.doAction()
+            tones.beep(700, 80)
+
+        except Exception:
+            ui.message("No se pudo abrir nuevo chat")
+
+    @scriptHandler.script(
+        description=_("Ir al cuadro de mensaje"),
+        category=_("Telegram Justi"),
+        gesture="kb:alt+e"
+    )
     def script_focusMessageEdit(self, gesture):
         """Enfoca el cuadro de mensaje."""
 
         fg = api.getForegroundObject()
 
+        edit = self.findObjectByAutomationID(
+            fg,
+            "TextField"
+        )
+
+        if not edit:
+            ui.message("Cuadro de mensaje no encontrado")
+            return
+
         try:
-
-            edit = self.findObjectByName(
-                fg,
-                "Mensaje"
-            )
-
-            if not edit:
-
-                ui.message(
-                    "Cuadro mensaje no encontrado"
-                )
-
-                return
-
             edit.setFocus()
-
-            tones.beep(900, 100)
-
-            ui.message(
-                "Cuadro mensaje"
-            )
+            tones.beep(700, 80)
 
         except Exception:
-            log.exception(
-                "Error enfocando cuadro mensaje"
-            )
+            ui.message("No se pudo enfocar el cuadro de mensaje")
 
-            ui.message(
-                "No se pudo abrir el cuadro mensaje"
-            )
-
+    @scriptHandler.script(
+        description=_("Abrir menú de navegación"),
+        category=_("Telegram Justi"),
+        gesture="kb:control+shift+m"
+    )
     def script_openNavigationMenu(self, gesture):
-        """Abre el menú de navegación."""
+        fg = api.getForegroundObject()
 
-        self.activateNamedControl(
-            "Abrir menú de navegación",
-            successMessage="Menú de navegación",
-            errorMessage="Menú no encontrado"
+        button = self.findObjectByAutomationID(
+            fg,
+            "Photo"
         )
+
+        if not button:
+            ui.message("Menú no encontrado")
+            return
+
+        try:
+            button.doAction()
+            tones.beep(700, 80)
+
+        except Exception:
+            ui.message("No se pudo abrir el menú")
+
+    @scriptHandler.script(
+        description=_("Volver directamente a la lista de chats"),
+        category=_("Telegram Justi"),
+        gesture="kb:alt+leftArrow"
+    )
+    def script_backToChats(self, gesture):
+        """Regresa directamente a la lista de chats."""
+
+        fg = api.getForegroundObject()
+
+        button = self.findObjectByAutomationID(
+            fg,
+            "BackButton"
+        )
+
+        if not button:
+            ui.message(_("Botón volver atrás no encontrado"))
+            return
+
+        try:
+            button.doAction()
+
+            tones.beep(800, 80)
+
+        except Exception:
+            ui.message(
+                _("No se pudo volver a la lista de chats")
+            )
 
     # =========================================================
     # Gestos
     # =========================================================
 
-    __gestures = {
-        "kb:control+r": "voiceMessage",
-        "kb:space": "playPauseAudio",
-        "kb:control+p": "openProfile",
-        "kb:control+shift+l": "voiceCall",
-        "kb:control+shift+v": "videoCall",
-        "kb:control+shift+n": "endCall",
-        "kb:control+shift+a": "attachMedia",
-        "kb:control+n": "newChat",
-        "kb:alt+e": "focusMessageEdit",
-        "kb:control+a": "openNavigationMenu",
-    }

@@ -1,32 +1,123 @@
-# TelegramJusti
+\# TelegramJusti 1.2.0
 
-Complemento de accesibilidad para NVDA compatible con Telegram Desktop y Unigram.
+Complemento híbrido de accesibilidad compatible con Telegram Desktop y Unigram.
 
-## Características
 
-* Grabación y envío de mensajes de voz.
-* Reproducción y pausa de audios.
-* Llamadas y videollamadas.
-* Acceso rápido a perfiles.
-* Adjuntar multimedia.
-* Navegación optimizada mediante atajos.
-* Enfoque automático en lista de chats.
 
-## \## Compatibilidad
+TelegramJusti amplía la accesibilidad de Telegram mediante atajos de teclado, automatización accesible y navegación optimizada para usuarios de NVDA.
 
-## 
 
-## \- NVDA 2026.1 o posterior
 
-## \- Compatible con NVDA 2026.1.1
+\## Características
 
-## \- Arquitectura x64
 
-## Autor
 
-Mauro Ocampo JustiCode
+\* Grabación y envío de mensajes de voz.
 
-## Repositorio
+\* Cancelación de grabación de mensajes de voz.
+
+\* Reproducción y pausa de audios.
+
+\* Llamadas y videollamadas.
+
+\* Acceso rápido a perfiles.
+
+\* Adjuntar archivos multimedia.
+
+\* Creación rápida de nuevos chats.
+
+\* Acceso rápido al cuadro de edición de mensajes.
+
+\* Volver directamente a la lista de chats.
+
+\* Apertura del menú de navegación.
+
+\* Enfoque automático en la lista de chats.
+
+\* Compatibilidad híbrida con Telegram Desktop y Unigram.
+
+\* Gestos reasignables desde Gestos de Entrada de NVDA.
+
+
+
+\## Compatibilidad
+
+
+
+\* NVDA 2026.1 o posterior.
+
+\* Compatible con NVDA 2026.1.1.
+
+\* Arquitectura x64.
+
+\* Telegram Desktop.
+
+\* Unigram.
+
+
+
+\## Novedades de la versión 1.2.0
+
+* Añadida función para cancelar grabación de mensajes de voz mediante Ctrl+Shift+R.
+* Añadida función para volver directamente a la lista de chats mediante Alt+Flecha izquierda.
+* Implementado enfoque automático en la lista de chats al iniciar Unigram.
+* Migración al sistema moderno de scripts mediante `@script`.
+* Eliminación del sistema heredado `__gestures`.
+* Los gestos ahora son reasignables desde Gestos de Entrada de NVDA.
+* Migración progresiva a UI Automation y AutomationID.
+* Mejora significativa de compatibilidad multilenguaje.
+* Optimización de la detección de mensajes de voz mediante AutomationID `Recognize`.
+* Mejoras generales de estabilidad y mantenimiento del código.
+
+
+
+\## Autor
+
+
+
+\*\*Mauro Ocampo - JustiCode\*\*
+
+
+
+\## Repositorio
+
+
 
 https://github.com/JustiCode/TelegramJusti
+
+
+
+\## Agradecimientos
+
+
+
+A mi familia, por acompañar y sostener la atemporalidad de mi labor como incipiente y obstinado desarrollador de software accesible.
+
+
+A los compañeros que oficiaron como Beta Testers realizando pruebas en distintos equipos, arquitecturas de Telegram y sistemas operativos, además de aportar ideas y sugerencias que enriquecieron el proyecto.
+
+
+Un agradecimiento especial a Héctor Benítez de NVDA.ES por su paciencia, humildad y buena onda al recibir la presentación del complemento, brindandome sugerencias, recomendaciones y hasta una herramienta para su publicación.
+
+
+
+Asimismo, mi agradecimiento a José Manuel Delicado por sus comentarios y aportes técnicos, fundamentales durante el proceso de migración de scripts, modernización mediante `@script`, eliminación del sistema heredado de gestos y sustitución progresiva de llamadas basadas en etiquetas localizadas por AutomationID, contribuyendo a un complemento más robusto, estable y multilingüe.
+
+## Licencia
+
+TelegramJusti se distribuye bajo la licencia GNU General Public License v2 (GPL v2) o posterior.
+
+## Copyright
+
+Copyright © 2026 Mauro Ocampo - JustiCode.
+
+## Historial de versiones
+
+- **1.0.0** — Primera versión pública del complemento.
+
+- **1.2.0** — Nuevas funciones de navegación y gestión de mensajes de voz, migración a AutomationID, modernización mediante `@script` y gestos reasignables desde gestos de entrada de NVDA.
+
+Finalmente, gracias a toda la comunidad de NVDA  y Justicia Ciega, cuya experiencia compartida hace posible seguir construyendo herramientas para todos y todas.
+
+
 
