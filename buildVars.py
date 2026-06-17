@@ -20,10 +20,10 @@ addon_info = AddonInfo(
 
 	# User-visible add-on name
 	addon_summary=_(
-    "TelegramJusti_1.1.0 complemento híbrido de accesibilidad para Telegram y Unigram"
+    "TelegramJusti_1.2.0 complemento híbrido de accesibilidad para Telegram y Unigram"
 ),
 
-	# Add-on description
+	# Add-on descri		ption
 	addon_description=_(
     """TelegramJusti es un complemento híbrido de accesibilidad compatible con Telegram Desktopy Unigram.
 
@@ -103,4 +103,4 @@ markdownExtensions = [
 brailleTables: BrailleTables = {}
 
 # Symbol dictionaries
-symbolDictionaries: SymbolDictionaries = {}
+symbolDictionaries: SymbolDictionaries = {}		
