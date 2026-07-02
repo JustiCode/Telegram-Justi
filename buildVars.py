@@ -20,55 +20,52 @@ addon_info = AddonInfo(
 
 	# User-visible add-on name
 	addon_summary=_(
-    "TelegramJusti_1.1.0 complemento híbrido de accesibilidad para Telegram y Unigram"
-),
+		"TelegramJusti 2.0.0 - Complemento híbrido de accesibilidad para Telegram Desktop y Unigram"
+	),
 
 	# Add-on description
 	addon_description=_(
-    """TelegramJusti es un complemento híbrido de accesibilidad compatible con Telegram Desktopy Unigram.
+		"""TelegramJusti es un complemento híbrido de accesibilidad para NVDA compatible con Telegram Desktop y Unigram.
 
-Proporciona atajos de teclado, automatización accesible y navegación optimizada para usuarios de NVDA.
+Proporciona automatización accesible, navegación optimizada y gestos completamente reasignables.
 
-Incluye funciones para mensajes de voz, llamadas, videollamadas, navegación rápida entre chats, acceso a perfiles y adjuntos multimedia.
+Incluye grabación, envío y reproducción de mensajes de voz, llamadas, videollamadas, perfiles, adjuntos multimedia, descarga y apertura de archivos, paneles de emoji y reacciones, transcripción de voz, acceso rápido al cuadro de edición, menú de navegación, regreso a la lista de chats y enfoque automático al iniciar Unigram.
 
-Los gestos son personalizables desde Gestos de Entrada de NVDA."""
-),
+La versión 2.0.0 incorpora una arquitectura multimotor basada en UI Automation, AutomationID y el Motor V8 de búsqueda de controles accesibles, ofreciendo mayor robustez, compatibilidad multilenguaje y mantenimiento futuro."""
+	),
 
 	# Version
-addon_version="1.2.0",
+	addon_version="2.0.0",
 
-# Changelog
-    addon_changelog=_(
-    """Versión 1.2.0
+	# Changelog
+	addon_changelog=_(
+		"""Versión 2.0.0
 
-Novedades:
-
-* Añadida función para cancelar grabación de mensajes de voz (Ctrl+Shift+R).
-* Añadida función para volver directamente a la lista de chats (Alt+Flecha izquierda).
-* Implementado enfoque automático en la lista de chats al iniciar Unigram.
-* Migración al sistema moderno de scripts mediante @script.
-* Eliminado el sistema heredado __gestures.
-* Los gestos ahora son reasignables desde Gestos de Entrada de NVDA.
+* Migración completa a @script.
+* Eliminación de __gestures.
+* Gestos completamente reasignables.
+* Arquitectura multimotor.
+* Motor V8 para búsqueda de controles.
 * Migración progresiva a UI Automation y AutomationID.
-* Mejorada significativamente la compatibilidad multilenguaje.
-* Optimizada la detección de mensajes de voz mediante AutomationID Recognize.
-* Mejorada la estabilidad general del complemento.
+* Compatibilidad multilenguaje mejorada.
+* Nuevas funciones para mensajes de voz, llamadas, videollamadas, adjuntos, paneles, transcripción y navegación.
+* Mejoras generales de estabilidad y rendimiento.
 """
-),
+	),
 
 	# Author
-	addon_author="Mauro Ocampo JustiCode <drmauroocampo271@gmail.com>",
+	addon_author="Mauro Ocampo - JustiCode <drmauroocampo271@gmail.com>",
 
 	# Documentation URL
 	addon_url="https://github.com/JustiCode/TelegramJusti",
-addon_sourceURL="https://github.com/JustiCode/TelegramJusti",
+	addon_sourceURL="https://github.com/JustiCode/TelegramJusti",
 
 	# Documentation filename
 	addon_docFileName="readme.html",
 
 	# NVDA compatibility
 	addon_minimumNVDAVersion="2026.1",
-addon_lastTestedNVDAVersion="2026.1.1",
+	addon_lastTestedNVDAVersion="2026.1.1",
 
 	# Update channel
 	addon_updateChannel=None,
